@@ -1,0 +1,145 @@
+/* General Styles */
+.sectors-page {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .filter-btn {
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .filter-btn:hover {
+    background: #f3f3f3;
+  }
+  
+  .content {
+    display: flex;
+  }
+  
+  /* Table Styles */
+  .table-container {
+    flex-grow: 1;
+    background: white;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .sector-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .sector-table th,
+  .sector-table td {
+    text-align: left;
+    padding: 0.5rem;
+  }
+  
+  .sector-table th {
+    border-bottom: 2px solid #e2e2e2;
+  }
+  
+  .sector-table tr:hover {
+    background: #f9f9f9;
+  }
+  
+  .graph-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Filter Panel Styles */
+  .filter-panel {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: white;
+    border-left: 1px solid #e2e2e2;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .filter-panel.open {
+    transform: translateX(-300px);
+  }
+  
+  .filter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e2e2e2;
+  }
+  
+  .filter-title {
+    font-size: 1.25rem;
+    font-weight: medium;
+  }
+  
+  .close-btn {
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-bar {
+    position: relative;
+    padding: 1rem;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .search-bar .icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    color: #aaa;
+  }
+  
+  .filters {
+    padding: 1rem;
+  }
+  
+  .filter-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  
+  .filter-option input {
+    margin-right: 0.5rem;
+  }
+  
