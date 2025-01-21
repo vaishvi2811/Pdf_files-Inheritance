@@ -2,15 +2,44 @@ import validator from "validator";
 import bcrypt, { genSalt } from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import axios from 'axios';
 
 const createToken = (id) => {
     return jwt.sign({id},process.env.JWT_SECRET);
 }
 
 //Route for user login
-const loginUser = async (req,res) =>{
-    res.json("api working");
-}
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ success: false, message: "Email and password are required" });
+        }
+
+        // Find user by email
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User does not exist" });
+        }
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+            // Generate token
+            const token = createToken(user._id);
+
+            return res.status(200).json({ success: true, token });
+        } else {
+            return res.status(401).json({ success: false, message: "Incorrect password" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "An error occurred, please try again" });
+    }
+};
+
 
 //Route for user registration
 const registerUser = async (req,res) =>{
@@ -40,7 +69,7 @@ const registerUser = async (req,res) =>{
         const newUser = new userModel({
             name,
             email,
-            password
+            password: hashedPassword
         })
 
         const user = await newUser.save()

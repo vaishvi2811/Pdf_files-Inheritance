@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
         transactions:[
             {
                 type : mongoose.Schema.Types.ObjectId,
-                ref : 'Transactions',
+                ref : 'Transaction',
             },
         ],
     },{minimize: false}
