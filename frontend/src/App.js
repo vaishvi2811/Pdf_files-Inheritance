@@ -7,6 +7,9 @@ import UserProfile from './Components/UserProfile';
 import Portfolio from './Components/Portfolio';
 import StockCard from './Components/StockCards';
 import StockDetail from './Components/StockPage';
+import Login from './Components/Login';
+import Signup from './Components/Signup';
+
 
 function App() {
   return (
@@ -16,6 +19,8 @@ function App() {
      <StockCard />
      <StockWatchlist /> 
      <StockDetail />
+     <Login />
+     <Signup />
      {/* <UserProfile />  */}
       <Portfolio /> 
     </div>
