@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
+import { TrendingUp, Eye, User, Search, Sun } from 'lucide-react';
 
 const Dashboard = ({ userName }) => {
   const [thought, setThought] = useState('Be patient and think long-term');
@@ -9,26 +10,12 @@ const Dashboard = ({ userName }) => {
   const [watchlist, setWatchlist] = useState([]);
   const [newWatchItem, setNewWatchItem] = useState('');
 
-  useEffect(() => {
-    const fetchThought = async () => {
-      try {
-        const response = await fetch('https://api.api-ninjas.com/v1/quotes?category=money', {
-          headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_API_KEY}`,
-          },
-        });
-        const data = await response.json();
-        setThought(data[0]?.quote || 'Stay positive and invest wisely.');
-      } catch (error) {
-        console.error('Failed to fetch thought:', error);
-      }
-    };
-
-    fetchThought();
-    const interval = setInterval(fetchThought, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const indices = [
+    { name: "Sensex", value: "72,500", change: "+1.2%" },
+    { name: "Nifty 50", value: "21,800", change: "-0.8%" },
+    { name: "Bank Nifty", value: "45,200", change: "+0.5%" },
+    { name: "Nifty IT", value: "37,200", change: "-0.3%" },
+  ];
 
   useEffect(() => {
     const fetchWatchlist = async () => {
@@ -50,89 +37,72 @@ const Dashboard = ({ userName }) => {
       setNewWatchItem('');
     }
   };
-  const GlobalIndices = () => {
-    const indices = [
-      { name: "Dow Jones", value: "34,000", change: "+1.2%" },
-      { name: "NASDAQ", value: "14,500", change: "-0.8%" },
-      { name: "S&P 500", value: "4,200", change: "+0.5%" },
-      { name: "FTSE 100", value: "7,200", change: "-0.3%" },
-    ];
-  }
+
   return (
     <div className="dashboard">
       <header className="header">
-        <div className="logo">SCAM 1997</div>
-        <nav className="nav">
-          <input type="text" placeholder="Search bar" />
-        </nav>
-        <div className="profile">Profile</div>
+        <div className="logo">
+          <TrendingUp className="logo-icon" size={24} />
+          <span>Market Mind</span>
+        </div>
+        <div className="search-container">
+          <Search className="search-icon" size={20} />
+          <input type="text" placeholder="Search stocks, mutual funds..." />
+        </div>
+        <div className="profile-section">
+          <Sun className="theme-icon" size={20} />
+          <User className="user-icon" size={20} />
+        </div>
       </header>
 
-      <main className="main-content">
-        <div className="box">
-          <div className="welcome-section">
-            <h2>Hi, {userName}</h2>
-            <div className="thought">{thought}</div>
-          </div>
-        </div>
+      <section className="welcome-section">
+        <h2>Welcome back</h2>
+        <div className="thought-bubble">{thought}</div>
+      </section>
 
-        <div className="investment-section">
-          <div className="box2">
-            <div className="box3">
-              <div className="investment-box">
-                <h4>Your Investments</h4>
-                <button onClick={() => setIsInvestmentVisible(!isInvestmentVisible)}>
-                  {isInvestmentVisible ? 'Hide Investment' : 'Show Investment'}
-                </button>
+      <div className="dashboard-grid">
+        <section className="investment-card">
+          <h3>Your Investments</h3>
+          <button 
+            className="visibility-toggle"
+            onClick={() => setIsInvestmentVisible(!isInvestmentVisible)}
+          >
+            <Eye size={18} />
+            Show Balance
+          </button>
+        </section>
 
-                {isInvestmentVisible && (
-                  <>
-                    {investmentAmount === 0 ? (
-                      <p>No investments yet.</p>
-                    ) : (
-                      <p>Amount Invested: ${investmentAmount}</p>
-                    )}
-                    <input
-                      type="number"
-                      value={inputAmount}
-                      onChange={(e) => setInputAmount(e.target.value)}
-                      placeholder="Enter investment amount"
-                    />
-                    <button onClick={handleInvestment}>Invest</button>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="box3">
-              <div className="investment-box">
-                <h4>Watchlist</h4>
-                <ul>
-                  {watchlist.length === 0 ? (
-                    <li>No items in your watchlist.</li>
-                  ) : (
-                    watchlist.map((item, index) => <li key={index}>{item}</li>)
-                  )}
-                </ul>
-                <input
-                  type="text"
-                  value={newWatchItem}
-                  onChange={(e) => setNewWatchItem(e.target.value)}
-                  placeholder="Add to watchlist"
-                />
-                <button onClick={handleAddToWatchlist}>Add</button>
-              </div>
+        <section className="watchlist-card">
+          <h3>Watchlist</h3>
+          <p>Add stocks to track them</p>
+          <div className="watchlist-content">
+            <div className="watchlist-input">
+              <input
+                type="text"
+                value={newWatchItem}
+                onChange={(e) => setNewWatchItem(e.target.value)}
+                placeholder="Add stock symbol"
+              />
+              <button onClick={handleAddToWatchlist}>Add</button>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* New Indian Indices Box */}
-        <div className="indices-section">
-          <div className="index-box">
-            <h4>Indian Indices</h4>
-            <p>Sensex, Nifty 50, and more...</p>
+        <section className="indices-card">
+          <h3>Market Indices</h3>
+          <div className="indices-grid">
+            {indices.map((index, i) => (
+              <div key={i} className="index-item">
+                <h4>{index.name}</h4>
+                <p className="index-value">{index.value}</p>
+                <span className={`change ${index.change.startsWith('+') ? 'positive' : 'negative'}`}>
+                  {index.change}
+                </span>
+              </div>
+            ))}
           </div>
-        </div>
-      </main>
+        </section>
+      </div>
     </div>
   );
 };

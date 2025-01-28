@@ -1,0 +1,126 @@
+/* StockDetail.css */
+.stock-detail-container {
+    padding: 2rem;
+    max-width: 1300px;
+    margin: 15px auto;
+    position: relative;
+    font-family: 'Poppins', sans-serif;
+    background: var(--primary);
+    color: var(--text-light);
+    min-height: 100vh;
+    border-radius: 16px;
+}
+
+.stock-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.header-card {
+    background-color: #25A18E;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    grid-column: 1 / -1;
+}
+
+.chart-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chart-card {
+    background-color: #25A18E;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+}
+
+.metrics-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.metric-card {
+    background-color: #25A18E;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: fit-content;
+}
+
+.metric-card:hover {
+    background-color: #00A5CF;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    grid-column: 1 / -1;
+}
+
+.stat-item {
+    background-color: #25A18E;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background-color: #00A5CF;
+    transform: translateY(-2px);
+}
+
+.icon {
+    color: #9FFFCB;
+}
+
+.title {
+    color: white;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #9FFFCB;
+    opacity: 0.9;
+}
+
+.value {
+    color: white;
+    font-weight: 600;
+}
+
+.positive {
+    color: #7AE582;
+}
+
+.chart-container {
+    height: 400px;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .stock-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+}
+
+@media (max-width: 640px) {
+    .summary-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
