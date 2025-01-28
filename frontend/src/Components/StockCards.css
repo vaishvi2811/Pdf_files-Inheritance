@@ -1,0 +1,205 @@
+
+  /* Stock Card Container */
+.stock-card {
+    width: 100%;
+    max-width: 1300px;
+    background-color: #004E64;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+/* Header Styles */
+.stock-header {
+    padding: 24px 28px;
+    background-color: rgba(0, 165, 207, 0.1);
+    border-bottom: 1px solid rgba(0, 165, 207, 0.3);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.trend-icon {
+    width: 32px;
+    height: 32px;
+    color: #7AE582;
+    filter: drop-shadow(0 2px 4px rgba(122, 229, 130, 0.2));
+}
+
+.card-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+    color: #fff;
+}
+
+.card-description {
+    font-size: 15px;
+    color: #9FFFCB;
+    margin: 4px 0 0 48px;
+    opacity: 0.9;
+}
+
+/* Stock List Content */
+.stock-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Individual Stock Item */
+.stock-item {
+    background-color: #25A18E;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stock-item:hover {
+    background-color: #00A5CF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Stock Information Layout */
+.stock-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stock-main-info {
+    flex: 1;
+}
+
+.stock-name {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    color: #fff;
+}
+
+.stock-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.stock-symbol {
+    color: #9FFFCB;
+    font-weight: 500;
+}
+
+.separator {
+    color: rgba(159, 255, 203, 0.5);
+}
+
+.stock-exchange {
+    color: #9FFFCB;
+    opacity: 0.8;
+}
+
+/* Price Information */
+.stock-price-info {
+    text-align: right;
+    min-width: 140px;
+}
+
+.current-price {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    color: #fff;
+}
+
+.price-change {
+    color: #7AE582;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.price-change .percentage {
+    margin-left: 6px;
+    opacity: 0.9;
+}
+
+.volume {
+    font-size: 13px;
+    color: #9FFFCB;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stock-card {
+        margin: 10px;
+        border-radius: 12px;
+    }
+
+    .stock-header {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 24px;
+    }
+
+    .card-description {
+        margin-left: 40px;
+        font-size: 14px;
+    }
+
+    .stock-content {
+        padding: 16px;
+    }
+
+    .stock-item {
+        padding: 16px;
+    }
+
+    .stock-name {
+        font-size: 18px;
+    }
+
+    .current-price {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stock-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .stock-price-info {
+        text-align: left;
+        width: 100%;
+    }
+
+    .card-description {
+        margin-left: 0;
+    }
+
+    .header-content {
+        gap: 12px;
+    }
+
+    .trend-icon {
+        width: 24px;
+        height: 24px;
+    }
+}

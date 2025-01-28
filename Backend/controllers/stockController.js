@@ -151,7 +151,7 @@ const sellStock = async (req, res) => {
             stockId,
             transactionType: 'sell',
             quantity,
-            soldPrice: currentPrice, // Use the fetched current price
+            purchasedPrice: currentPrice, // Use the fetched current price
         });
 
         // Save the transaction to the database
