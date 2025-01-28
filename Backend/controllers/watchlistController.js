@@ -143,4 +143,4 @@ const getUserWatchlists = async (req, res) => {
   };
 
 
-export {createWatchlist, addStockToWatchlist};
+export {createWatchlist, addStockToWatchlist, getUserWatchlists};

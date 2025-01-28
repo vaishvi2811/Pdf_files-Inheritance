@@ -14,6 +14,7 @@ const getStockData = async(req,res) =>{
         
         // Call the stock market API
         const apiKey = process.env.ALPHA_VANTAGE_API_KEY; // Add your API key in the .env file
+        //const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
         const apiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`;
 
         const response = await axios.get(apiUrl);
@@ -24,8 +25,8 @@ const getStockData = async(req,res) =>{
             return res.status(404).json({ error: "Stock data not found" });
         }
 
-        const currentPrice = stockData["05. price"]; // Key for current price in the API response
-        return res.json({ symbol, currentPrice });
+        //const currentPrice = stockData["05. price"]; // Key for current price in the API response
+        return res.json({ symbol, stockData });
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch stock data' });
     }
@@ -94,6 +95,87 @@ const buyStock = async (req, res) => {
         
 };
 
+//function to sell stock
+const sellStock = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { userId, stockId, quantity } = req.body;
+
+        // Validate the required fields
+        if (!userId || !stockId || !quantity) {
+            return res.status(400).json({ error: 'All fields are required!' });
+        }
+
+        // Fetch the user and their transactions
+        const user = await userModel.findById(userId).populate('transactions');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found!' });
+        }
+
+        // Filter transactions to find the stock transactions
+        const relevantTransactions = user.transactions.filter(
+            (txn) => txn.stockId === stockId
+        );
+
+        // Calculate total quantity of the stock owned
+        const totalQuantityOwned = relevantTransactions.reduce((total, txn) => {
+            if (txn.transactionType === 'buy') {
+                return total + txn.quantity;
+            } else if (txn.transactionType === 'sell') {
+                return total - txn.quantity;
+            }
+            return total;
+        }, 0);
+
+        // Check if the user has enough quantity to sell
+        if (totalQuantityOwned < quantity) {
+            return res.status(400).json({ error: 'Not enough quantity to sell!' });
+        }
+
+        // Fetch the current price of the stock from an external API
+        const apiKey = process.env.ALPHA_VANTAGE_API_KEY; // Add your API key in the .env file
+        const stockApiUrl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stockId}&apikey=${apiKey}`;
+        const response = await axios.get(stockApiUrl);
+
+        // Extract the current price from the API response
+        const stockData = response.data["Global Quote"];
+        if (!stockData) {
+            return res.status(404).json({ error: 'Failed to fetch stock price!' });
+        }
+        const currentPrice = stockData["05. price"];
+
+        // Create a new transaction for selling the stock
+        const newTransaction = new transactionModel({
+            transactionId: `TXN-${Date.now()}`, // Generate a unique transaction ID
+            userId,
+            stockId,
+            transactionType: 'sell',
+            quantity,
+            soldPrice: currentPrice, // Use the fetched current price
+        });
+
+        // Save the transaction to the database
+        const savedTransaction = await newTransaction.save();
+
+        // Add the transaction to the user's transactions list
+        user.transactions.push(savedTransaction._id);
+        await user.save();
+
+        return res.status(201).json({
+            message: 'Stock sold successfully!',
+            transaction: savedTransaction,
+        });
+    } catch (error) {
+        console.error('Error details:', error);
+
+        if (error.response && error.response.data) {
+            return res.status(400).json({ error: error.response.data.message });
+        }
+
+        return res.status(500).json({ error: 'Server error. Please try again later.' });
+    }
+};
+
 // Controller function to fetch transactions for a specific user
 const getUserTransactions = async (req, res) => {
     try {
@@ -154,10 +236,12 @@ const getUserTransactions = async (req, res) => {
       });
     }
   };
+
+  
   
   
   
 
 
 
-export {getStockData,buyStock, getUserTransactions};
+export {getStockData,buyStock, getUserTransactions, sellStock};

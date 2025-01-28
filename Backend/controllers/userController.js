@@ -4,9 +4,13 @@ import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import axios from 'axios';
 
-const createToken = (id) => {
-    return jwt.sign({id},process.env.JWT_SECRET);
-}
+const createToken = (userId) => {
+    const payload = { userId };
+    const secretKey = process.env.JWT_SECRET || "your_secret_key"; // Store in .env for security
+    const options = { expiresIn: "1h" }; // Token expires in 1 hour
+
+    return jwt.sign(payload, secretKey, options);
+};
 
 //Route for user login
 const loginUser = async (req, res) => {
@@ -43,6 +47,7 @@ const loginUser = async (req, res) => {
 
 //Route for user registration
 const registerUser = async (req,res) =>{
+    console.log(req.headers);
     try{
         const {name,email,password} = req.body;
 
