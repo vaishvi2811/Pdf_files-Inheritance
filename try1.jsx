@@ -38,8 +38,7 @@ const Signup = () => {
       const data = await response.json();
       
       if (data.success) {
-        alert('Signup successful! Please log in.');
-        navigate('/'); // Redirect to Login page
+        navigate('/dashboard'); // Redirect to Dashboard.jsx
       } else {
         setError(data.message || 'Signup failed. Please try again.');
       }
@@ -107,8 +106,7 @@ const Signup = () => {
         </form>
         
         <p className="auth-switch">
-          Already have an account? 
-          <span onClick={() => navigate('/')} className="auth-link"> Sign In</span>
+          Already have an account? <a href="/Login">Sign In</a>
         </p>
       </div>
     </div>
