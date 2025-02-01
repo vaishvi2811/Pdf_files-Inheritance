@@ -1,6 +1,7 @@
 import axios from "axios";
 import transactionModel from "../models/transactionModel.js";
 import userModel from "../models/userModel.js";
+import "dotenv/config";
 
 
 //Route for stock data
@@ -237,6 +238,40 @@ const getUserTransactions = async (req, res) => {
     }
   };
 
+  const searchStock = async (req, res) => {
+    try {
+        const { query } = req.body;
+        if (!query) {
+            return res.status(400).json({ success: false, message: "Search query is required" });
+        }
+
+        const apiKey = process.env.ALPHA_VANTAGE_API_KEY;
+        const url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${query}&apikey=${apiKey}`;
+        const response = await axios.get(url);
+        
+        if (!response.data.bestMatches) {
+            return res.status(404).json({ success: false, message: "No results found" });
+        }
+
+        // Format response
+        const results = response.data.bestMatches.map((stock) => ({
+            symbol: stock["1. symbol"],
+            name: stock["2. name"],
+            type: stock["3. type"],
+            region: stock["4. region"],
+            marketOpen: stock["5. marketOpen"],
+            marketClose: stock["6. marketClose"],
+            timezone: stock["7. timezone"],
+            currency: stock["8. currency"]
+        }));
+
+        res.json({ success: true, data: results });
+
+    } catch (error) {
+        console.error("Error fetching stock data:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error", error: error.message });
+    }
+};
   
   
   
@@ -244,4 +279,4 @@ const getUserTransactions = async (req, res) => {
 
 
 
-export {getStockData,buyStock, getUserTransactions, sellStock};
+export {getStockData,buyStock, getUserTransactions, sellStock, searchStock};

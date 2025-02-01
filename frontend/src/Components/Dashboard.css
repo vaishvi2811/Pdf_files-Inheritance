@@ -297,3 +297,7 @@
     grid-template-columns: 1fr;
   }
 }
+
+.summary-stats {
+  margin-top: var(--spacing-sm);
+}

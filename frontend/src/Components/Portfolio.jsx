@@ -1,7 +1,24 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import './Portfolio.css';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../utils/auth';
+
+
 
 const Portfolio = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+      const navigate = useNavigate();
+    
+      useEffect(()=>{
+          const token = getAuthToken();
+          if(token){
+            setIsAuthenticated(true);
+          }else{
+            navigate('/')
+          }
+        },[]);
+        
   return (
     <div className="portfolio">
       <nav className="navbar">

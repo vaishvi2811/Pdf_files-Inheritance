@@ -9,44 +9,42 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import Portfolio from './Components/Portfolio';
 import { getAuthToken } from './utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   // ✅ Initialize authentication state from localStorage
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   // ✅ Check for token on app load
   useEffect(() => {
     const token = getAuthToken();
     if (token) {
-      setIsAuthenticated(false);
+      setIsAuthenticated(true);
     }
   }, []);
 
+
   return (
+        <Router>
       <Routes>
-        {/* Public Routes */}
+
         <Route
           path="/"
           element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Login setIsAuthenticated={setIsAuthenticated} />
+            isAuthenticated ? <Dashboard/> : <Login setIsAuthenticated={setIsAuthenticated} />
           }
-        />
+          />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Routes */}
-        {isAuthenticated ? (
-          <>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/sectors" element={<SectorsPage />} />
-            <Route path="/stock-card" element={<StockCard />} />
-            <Route path="/stock-watchlist" element={<StockWatchlist />} />
-            <Route path="/stock-detail" element={<StockDetail />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-          </>
-        ) : (
-          <Route path="*" element={<Navigate to="/" />} /> // ✅ Redirect all unknown paths to login
-        )}
+        <Route path="/sectors" element={<SectorsPage setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/dashboard" element={<Dashboard setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/stock-card" element={<StockCard setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/stock-watchlist" element={<StockWatchlist setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/stock-detail" element={<StockDetail setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/portfolio" element={<Portfolio setIsAuthenticated={setIsAuthenticated}  />} />
+        <Route path="*" element={<Navigate to="/" />} /> // ✅ Redirect all unknown paths to login
+    
       </Routes>
+        </Router>
   );
 }
 

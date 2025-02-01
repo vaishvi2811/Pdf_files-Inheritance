@@ -1,20 +1,37 @@
 // StockDetail.jsx
-import React from 'react';
+import React, {useState, useMemo,useEffect} from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { TrendingUp, BarChart2, Activity, Globe, DollarSign, TrendingDown, Percent, Clock } from 'lucide-react';
 import './StockPage.css';
+import { getAuthToken } from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 const chartData = [
     { date: '2024-01-20', price: 150.20 },
     { date: '2024-01-21', price: 152.50 },
     { date: '2024-01-22', price: 148.30 },
     { date: '2024-01-23', price: 153.80 },
+
+    
     { date: '2024-01-24', price: 155.90 },
     { date: '2024-01-25', price: 154.20 },
     { date: '2024-01-26', price: 156.70 }
 ];
 
 const StockDetail = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+    const navigate=useNavigate();
+
+    useEffect(()=>{
+            const token = getAuthToken();
+            if(token){
+              setIsAuthenticated(true);
+            }else{
+              navigate('/')
+            }
+          },[]);
+          
     return (
         <div className="stock-detail-container">
             <div className="stock-container">
