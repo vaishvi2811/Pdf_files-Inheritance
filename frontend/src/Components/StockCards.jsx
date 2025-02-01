@@ -64,8 +64,10 @@
 
 // export default StockCard;
 
-import React from 'react';
+import React,{ useState, useMemo,useEffect } from 'react';
 import './StockCards.css';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../utils/auth';
 
 const StockCard = () => {
   // Hardcoded sample data
@@ -111,6 +113,18 @@ const StockCard = () => {
       }
     ]
   };
+  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+      const token = getAuthToken();
+      if(token){
+        setIsAuthenticated(true);
+      }else{
+        navigate('/')
+      }
+    },[]);
 
   return (
     <div className="stock-card">

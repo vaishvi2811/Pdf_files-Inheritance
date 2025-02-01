@@ -1,35 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import { TrendingUp, Eye, User, Search, Sun } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = ({ userName }) => {
+  const navigate = useNavigate();
   const [thought, setThought] = useState('Be patient and think long-term');
   const [investmentAmount, setInvestmentAmount] = useState(0);
   const [inputAmount, setInputAmount] = useState('');
   const [isInvestmentVisible, setIsInvestmentVisible] = useState(false);
   const [watchlist, setWatchlist] = useState([]);
   const [newWatchItem, setNewWatchItem] = useState('');
+  const [indices, setIndices] = useState([]);
 
-  const indices = [
-    { name: "Sensex", value: "72,500", change: "+1.2%" },
-    { name: "Nifty 50", value: "21,800", change: "-0.8%" },
-    { name: "Bank Nifty", value: "45,200", change: "+0.5%" },
-    { name: "Nifty IT", value: "37,200", change: "-0.3%" },
-  ];
 
   useEffect(() => {
-    const fetchWatchlist = async () => {
+    const fetchMarketIndices = async () => {
       try {
-        const response = await fetch(`/api/watchlist?user=${userName}`);
+        const response = await fetch('http://localhost:4000/api/user/market-indices'); // Call your backend API
         const data = await response.json();
-        setWatchlist(data?.watchlist || []);
+        
+        if (data.success) {
+          setIndices(data.data);
+        } else {
+          console.error('Failed to fetch market indices');
+        }
       } catch (error) {
-        console.error('Failed to fetch watchlist:', error);
+        console.error('Error fetching market indices:', error);
       }
     };
 
-    fetchWatchlist();
-  }, [userName]);
+    fetchMarketIndices();
+
+    // Set interval to fetch data every 1 minute (optional for real-time updates)
+    const interval = setInterval(fetchMarketIndices, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleAddToWatchlist = () => {
     if (newWatchItem.trim()) {
@@ -89,20 +95,41 @@ const Dashboard = ({ userName }) => {
         </section>
 
         <section className="indices-card">
-          <h3>Market Indices</h3>
-          <div className="indices-grid">
-            {indices.map((index, i) => (
-              <div key={i} className="index-item">
-                <h4>{index.name}</h4>
-                <p className="index-value">{index.value}</p>
-                <span className={`change ${index.change.startsWith('+') ? 'positive' : 'negative'}`}>
-                  {index.change}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+      <h3>Market Indices</h3>
+      <div className="indices-grid">
+        {indices.length > 0 ? (
+          indices.map((index, i) => (
+            <div key={i} className="index-item">
+              <h4>{index.name}</h4>
+              <p className="index-value">{index.value}</p>
+              <span className={`change ${index.change.startsWith('+') ? 'positive' : 'negative'}`}>
+                {index.change}
+              </span>
+            </div>
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
+    </section>
+      </div>
+
+      <div className="summary-stats">
+        {[
+          { label: 'Sector', value: 'Healthcare' },
+          { label: 'Sector', value: 'Automobile' },
+          { label: 'Sector', value: 'I. T.' },
+          { label: 'Sector', value: 'Energy' }
+            ].map((stat, index) => (
+              <div key={index} className="stat-item">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="icon">{stat.icon}</span>
+                  <span className="subtitle text-sm">{stat.label}</span>
+                </div>
+                <p className="title text-lg">{stat.value}</p>
+              </div>
+          ))}
+        </div>
     </div>
   );
 };

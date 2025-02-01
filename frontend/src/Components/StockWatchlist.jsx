@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './StockWatchlist.css';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../utils/auth';
 
 const StockWatchlist = () => {
   const [watchlists, setWatchlists] = useState([{ id: 1, name: 'Watchlist1', stocks: [] }]);
@@ -97,6 +99,18 @@ const StockWatchlist = () => {
   const filteredStocks = allStocks.filter(stock => 
     stock.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const navigate = useNavigate();
+  
+    useEffect(()=>{
+        const token = getAuthToken();
+        if(token){
+          setIsAuthenticated(true);
+        }else{
+          navigate('/')
+        }
+      },[]);
 
   return (
     <div className="container">

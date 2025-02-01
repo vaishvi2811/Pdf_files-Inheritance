@@ -1,10 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo,useEffect } from 'react';
 import { Search, Filter, X } from 'lucide-react';
 import './SectorsPage.css'; // Import the external CSS file
+import { getAuthToken } from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 const SectorsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const navigate=useNavigate();
 
   const allSectors = [
     { company: 'ICICI BANK', mp: '1000', closePrice: '995', mCap: '700B', hasGraph: true, sector: 'banking' },
@@ -49,6 +54,7 @@ const SectorsPage = () => {
 
   const [selectedSectors, setSelectedSectors] = useState(['banking']);
 
+
   const filters = [
     { id: 'banking', label: 'Banking', checked: true },
     { id: 'fmcg', label: 'FMCG', checked: false },
@@ -58,6 +64,15 @@ const SectorsPage = () => {
     { id: 'energy', label: 'Energy', checked: false },
     { id: 'metal', label: 'Metal', checked: false },
   ];
+
+  useEffect(()=>{
+    const token = getAuthToken();
+    if(token){
+      setIsAuthenticated(true);
+    }else{
+      navigate('/')
+    }
+  },[]);
 
   const handleSectorChange = (sectorId) => {
     setSelectedSectors((prev) =>

@@ -1,20 +1,51 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import { User, Lock, Mail, Phone } from 'lucide-react';
+import { User, Lock, Mail } from 'lucide-react';
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    phone: '',
     password: '',
     confirmPassword: ''
   });
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle signup logic here
+    setError(''); // Clear previous errors
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match!');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:4000/api/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('Signup successful! Please log in.');
+        navigate('/'); // Redirect to Login page
+      } else {
+        setError(data.message || 'Signup failed. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again later.');
+    }
   };
 
   return (
@@ -24,6 +55,8 @@ const Signup = () => {
           <h2>Create Account</h2>
           <p className="auth-subtitle">Join us today</p>
         </div>
+        
+        {error && <p className="error-message">{error}</p>}
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -44,17 +77,6 @@ const Signup = () => {
               placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <Phone className="input-icon" size={20} />
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChange={(e) => setFormData({...formData, phone: e.target.value})}
               required
             />
           </div>
@@ -85,7 +107,8 @@ const Signup = () => {
         </form>
         
         <p className="auth-switch">
-          Already have an account? <a href="/login">Sign In</a>
+          Already have an account? 
+          <span onClick={() => navigate('/')} className="auth-link"> Sign In</span>
         </p>
       </div>
     </div>
